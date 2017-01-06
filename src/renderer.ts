@@ -648,8 +648,6 @@ class SmileColumnCellRenderer implements ICellRendererFactory {
 }
 
 
-
-
 class CircleColumnCellRenderer implements ICellRendererFactory {
 
   createSVG(col: INumberColumn & Column, context: IDOMRenderContext): ISVGCellRenderer {

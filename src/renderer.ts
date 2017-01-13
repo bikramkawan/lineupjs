@@ -403,6 +403,14 @@ class VerticalBarCellRenderer implements ICellRendererFactory {
 
 class BoxplotCellRenderer implements ICellRendererFactory {
 
+  private readonly renderValue;
+
+  constructor(renderValue = false, private colorOf: (d: any, i: number, col: Column) => string = (d, i, col) => col.color) {
+    console.log(renderValue);
+    this.renderValue = renderValue;
+  }
+
+
   createSVG(col: IBoxPlotColumn & Column, context: IDOMRenderContext): ISVGCellRenderer {
     const userSort = col.getSortMethod();
     const topPadding = 2.5 * (context.option('rowPadding', 1));
@@ -411,15 +419,18 @@ class BoxplotCellRenderer implements ICellRendererFactory {
     const currentSortColumn = col.findMyRanker().getSortCriteria().col;
     return {
 
-      template: `<g class="boxplotcell"></g>`,
+      template: `<g class="boxplotcell">
+<text class="number ${this.renderValue ? '' : 'hoverOnly'}" clip-path="url(#cp${context.idPrefix}clipCol${col.id})"></text>
+</g>`,
       update: (n: SVGGElement, d: IDataRow, i: number) => {
         const boxdata = col.getBoxPlotData(d.v, d.dataIndex,);
-        /*
-         Just for targid case only when the data is not loaded fully.
-         // if(boxdata === null || undefined){
-         //   return;
-         // }
-         */
+        const boxRaw = col.getBoxPlotData(d.v, d.dataIndex,);
+
+         // Just for targid case only when the data is not loaded fully.
+         if(boxdata === null || undefined){
+           return;
+         }
+
 
         boxdata.min = scale(boxdata.min);
         boxdata.max = scale(boxdata.max);
@@ -439,6 +450,10 @@ class BoxplotCellRenderer implements ICellRendererFactory {
             height: (d: number, j: number) => (context.rowHeight(j) - (topPadding * 2))
           });
         rect.exit().remove();
+        console.log(d.v, d.dataIndex)
+        console.log(col.getValue(d.v, d.dataIndex))
+        attr(<SVGTextElement>n.querySelector('text'), {}).textContent = `{ min = ${boxRaw.min} , 
+                                                max = ${boxRaw.max} , median = ${boxRaw.median} , q1 = ${boxRaw.q1} , q3 = ${boxRaw.q3}`;
 
         const pathAll = d3.select(n).selectAll('path.boxplotallpath').data([col.getValue(d.v, d.dataIndex)]);
         pathAll.enter().append('path');

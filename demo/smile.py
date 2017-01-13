@@ -5,11 +5,11 @@ import subprocess
 
 # Change these as per your needs
 file_path = "smiles.txt"
-row_start = 1
-row_end = 143
+row_start =0
+row_end = 7257
 column_index = 16
 
-with open(file_path) as f:
+with open(file_path, encoding='mac_roman',) as f:
     reader = csv.reader(f,delimiter='\t')
     column_head = itertools.islice(reader,0,1)
     directory = None

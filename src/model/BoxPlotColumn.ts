@@ -60,13 +60,13 @@ export default class BoxPlotColumn extends ValueColumn< IBoxPlotData > implement
 
 
   // // Only For Targid
-  // public setDomain(domain: number[]) {
-  //   this.domain = domain;
-  //   const bak = this.boxPlotScale.domain();
-  //   console.log(domain);
-  //   this.boxPlotScale.domain(domain);
-  //   this.fire([Column.EVENT_DIRTY_VALUES, Column.EVENT_DIRTY], bak, domain);
-  // }
+  public setDomain(domain: number[]) {
+    this.domain = domain;
+    const bak = this.boxPlotScale.domain();
+    console.log(domain);
+    this.boxPlotScale.domain(domain);
+    this.fire([Column.EVENT_DIRTY_VALUES, Column.EVENT_DIRTY], bak, domain);
+  }
 
 
   compare(a: any, b: any, aIndex: number, bIndex: number): number {
